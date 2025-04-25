@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ```bash
 git clone https://github.com/davy1ex/obsRefactorer
 cd obsRefactorer
-pip install -r
+pip install -r requirements.txt
 python3 main.py
 ```
 
