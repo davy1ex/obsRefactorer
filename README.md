@@ -29,4 +29,4 @@ python3 main.py
 
 ## Features:
 - U can locate attachemnts to archive folder
-- Rert changes: I also added a log to movement_history.txt for fun so that you can return everything back to how it was
+- Revert changes: I also added a log to movement_history.txt for fun so that you can return everything back to how it was
