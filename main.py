@@ -3,12 +3,20 @@ import shutil
 import re
 from datetime import datetime
 
+# === CONFIG ===
+# Folders to scan and move files between
+ARCHIVE_FOLDER_NAME = "04_archive"
+REFERENCES_FOLDER_NAME = "03_references"
+MOVEMENT_LOG_FILE = 'movement_history.txt'
+
+
 # Function to extract all wiki links
 def extract_wiki_links(file_path):
     wiki_link_pattern = re.compile(r'!?\[\[([^|\]]+)(?:\|[^]]*)?\]\]')
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
     return wiki_link_pattern.findall(content)
+
 
 # Collecting all markdown files in the folder
 def collect_markdown_files(folder):
@@ -19,6 +27,7 @@ def collect_markdown_files(folder):
                 md_files.append(os.path.join(root, file))
     return md_files
 
+
 # Get all subfolders in the specified folder
 def list_all_subfolders(folder):
     subfolders = []
@@ -26,6 +35,7 @@ def list_all_subfolders(folder):
         for d in dirs:
             subfolders.append(os.path.join(root, d))
     return subfolders
+
 
 # Choose the target directory for moving
 def choose_target_directory(default_path, all_dirs):
@@ -55,10 +65,11 @@ def choose_target_directory(default_path, all_dirs):
         print("❌ Invalid choice. Using the default path.")
         return default_path
 
+
 # Function to log the movements with error handling for encoding
 def log_movement(file_name, source_path, target_path):
     try:
-        with open('movement_history.txt', 'a', encoding='utf-8', errors='replace') as log_file:
+        with open(MOVEMENT_LOG_FILE, 'a', encoding='utf-8', errors='replace') as log_file:
             log_file.write(f"{datetime.now()} - Moved: {file_name}\n"
                            f"  Source path: {source_path}\n"
                            f"  Target path: {target_path}\n"
@@ -66,6 +77,7 @@ def log_movement(file_name, source_path, target_path):
             print(f"✅ Log saved: {file_name}")
     except Exception as e:
         print(f"❌ Error writing to log: {e}")
+
 
 # Moving a file and updating its path with enhanced error handling
 def move_asset_interactive(file_name, md_path, references_folder, archive_folder):
@@ -125,8 +137,8 @@ def move_asset_interactive(file_name, md_path, references_folder, archive_folder
     # Log the movement
     log_movement(file_name, src, dst)
 
-# === CONFIG ===
 
+# === CONFIG ===
 # Function to get the correct vault path
 def get_correct_vault_path():
     while True:
@@ -141,8 +153,9 @@ def get_correct_vault_path():
 
 vault_path = get_correct_vault_path()  # Input with validation
 
-archive_folder = os.path.join(vault_path, "04_archive")
-references_folder = os.path.join(vault_path, "03_references")
+# Set folder paths
+archive_folder = os.path.join(vault_path, ARCHIVE_FOLDER_NAME)
+references_folder = os.path.join(vault_path, REFERENCES_FOLDER_NAME)
 
 # Collect the list of all markdown files IN ADVANCE
 markdown_files = collect_markdown_files(archive_folder)
